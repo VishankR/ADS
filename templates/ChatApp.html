@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ADS</title>
+    <script src="../static/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="../static/Scripts/socket.io.js"></script>
+    <style>
+    html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    }
+    body
+    {
+    height:100%;
+    background-color:powderblue;
+    }
+
+          .container{
+          height:100%;
+          position: absolute;
+          width:100%;
+
+          }
+          .btn{
+  border: 1px solid #3498db;
+  border-radius:4px;
+  background: none;
+  padding: 10px 20px;
+  font-size: 80px;
+  font-family: "montserrat";
+  cursor: pointer;
+  margin: 10px;
+  transition: 0.8s;
+  position: relative;
+  overflow: hidden;
+}
+.btn1:hover{
+  color: #008000;
+}
+.btn2:hover{
+color: #FF0000;
+}
+.btn::before{
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0%;
+ background:#3498db;
+  z-index: -1;
+  transition: 0.8s;
+}
+.btn1::before,.btn2::before{
+  top: 0;
+  border-radius: 0 0 50% 50%;
+}
+.btn1:hover::before,.btn2:hover::before{
+  height: 180%;
+}
+          .btn1{
+          position:absolute;
+          top:10%;
+          }
+          .btn2{
+           position:absolute;
+          top:55%;
+          left:0%;
+          }
+          .left {
+          text-align:center;
+              font-size: 30px;
+              position: absolute;
+              left: 20%;
+              top:40%;
+              width: 400px;
+              border: 1px solid #3498db;
+              padding: 10px;
+              height: 50px;
+          }
+
+
+
+
+    </style>
+</head>
+<body>
+<audio id="warning">
+  <source src="../static/warning.mp3">
+</audio>
+<h1 style=" position:absolute;right: 25%;  text-decoration:underline; ">AUTOMATIC DISPENSING SYSTEM</h1>
+<img src="../static/images/aia.png" style="position: absolute;height: 150px;width: 400px;top:70%;right: 35%">
+<img id="meter" src="../static/images/4.png" style="position: absolute;height: 200px;width: 300px;top:30%;right: 20%">
+<div class="container">
+    <button type="button" class="btn btn1" id="button1" onClick="myfunction1()"
+            value="start">Start
+    </button>
+    <br><br>
+    <button type="button" class="btn btn2" id="button2"  onClick="myfunction2()"
+            value="stop">Stop
+    </button>
+    <div style="position: absolute; left:80%;top:10%">
+        <h2>BOTTLE COUNT</h2>
+    </div>
+    <div id="div32"style="position: absolute; left:85%;top:18%">
+    </div>
+    <div id="div31"style="position: absolute; right:20%;top:35%">
+    </div>
+    <div id="div1" class="left">Press Start</div>
+    <div style="position: absolute; left: 20%;top:32%;">
+    <h2>STATUS</h2>
+    </div>
+
+</div>
+</body>
+    <script>
+      var sec = 0
+      var processstate = false;
+      var x = document.getElementById("warning");
+      var socket = io.connect( 'http://' + document.domain + ':' + 5000 );
+      socket.on( 'connection', function() {
+        socket.emit( 'emitEventFromHTML', {data1: 'User Connected'} )
+       });
+
+        function myfunction1(){
+            document.getElementById("meter").src="../static/images/2.png";
+            let user_input ='Machine Started';
+            socket.emit( 'emitEventFromHTML', {
+              message : user_input, processState : processstate } );
+        };
+
+        function myfunction2(){
+            document.getElementById("meter").src="../static/images/4.png";
+            sec = 0;
+            x.pause();
+            let user_input = 'Machine Stopped';
+            socket.emit( 'emitEventFromHTML', {
+              message : user_input } );
+        }
+      // capture message
+      socket.on( 'my_response_function_from_app.py', function( msg ) {
+      	if((msg.message !== undefined || msg.message2 !== undefined || msg.message3 !==undefined))
+      	    {
+
+                $( '#div1' ).empty().append(msg.message);
+                $( '#div31').empty().append(msg.message2);
+                if(msg.message2 >0 && msg.message2 < 1500)
+                {
+                   document.getElementById("meter").src="../static/images/1.png";
+                   sec+=1;
+                   if(sec >= 10)
+                    {x.play();}
+               
+                } 
+                   else if(msg.message2==0)
+                    {
+                     document.getElementById("meter").src="../static/images/4.png";
+                     } 
+                     else if (msg.message2 >1500 && msg.message2 <3500)
+                     {
+                        document.getElementById("meter").src="../static/images/2.png";
+                       }
+                     else if(msg.message2 > 3500)
+                     {
+                   document.getElementById("meter").src="../static/images/3.png"; 
+                   sec+=1;
+                   if(sec >= 10)
+                    {x.play();}
+               
+                }
+                else
+                {
+                 sec=0
+                 x.pause(); 
+                }
+                $( '#div32').empty().append(msg.message3);
+                processstate = msg.processState;
+                $( 'div#div3').html(processstate);
+            }
+      } );
+
+    </script>
+</html>

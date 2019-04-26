@@ -1,0 +1,93 @@
+ button
+      { position:absolute;
+      transform : translate(-50%,-50%);
+      background : none;
+      color : #ccc;
+      width :240px;
+      height : 80px;
+      border : 1px solid #338033;
+      font-size : 18px;
+      border-radius : 4px;
+      transition: .6s;
+      overflow hidden;
+      }
+      #button2
+      {
+      position : absolute;
+      top: 50%;
+      left : 50%;
+      }
+      button : focus
+      {
+      outline:none;
+      }
+      button:before{
+         content: '';
+    display: block;
+    position: absolute;
+    background: rgba(255,255,255,.5);
+    width: 60px;
+    height: 100%;
+    left: 0;
+    top: 0;
+    opacity: .5;
+    filter: blur(30px);
+    transform: translateX(-130px) skewX(-15deg);
+      }
+      button:after{
+    content: '';
+    display: block;
+    position: absolute;
+    background: rgba(255,255,255,.2);
+    width: 30px;
+    height: 100%;
+    left: 30px;
+    top: 0;
+    opacity: 0;
+    filter: blur(30px);
+    transform: translateX(-100px) scaleX(-15deg);
+}
+
+button:hover:before {
+   transform: translateX(300px) skewX(-15deg);
+    opacity: .6;
+    transition: .7s;
+}
+
+button:hover:after {
+   transform: translateX(300px) skewX(-15deg);
+    opacity: 1;
+    transition: .7s;
+}﻿
+
+          .right {
+              position: absolute;
+              height:100%;
+              width: 100%;
+          }
+          .left {
+              position: absolute;
+              left: 50px;
+              width: 150px;
+              border: 3px solid #73AD21;
+              padding: 10px;
+              height: 50px;
+          }
+          .left_bottom {
+              position: absolute;
+              top: 100px;
+              left: 50px;
+              width: 150px;
+              border: 3px solid #73AD21;
+              padding: 10px;
+              height: 50px;
+          }
+          .left_bottom_2 {
+              position: absolute;
+              top: 200px;
+              left: 50px;
+              width: 150px;
+              border: 3px solid #73AD21;
+              padding: 10px;
+              height: 50px;
+          }
